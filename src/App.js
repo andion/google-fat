@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState } from "react";
+import GoogleLogin from "react-google-login";
+import GoogleProfile from "./components/google-profile";
 
-function App() {
+const responseGoogle = (response) => {
+  console.log(response);
+};
+
+const App = () => {
+  const [profile, setProfile] = useState();
+
+  const handleLoginSuccess = ({ profileObj }) => {
+    console.log(profileObj);
+    setProfile(profileObj);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Google FAT</h1>
+      <GoogleLogin
+        clientId={process.env.REACT_APP_CLIENT_ID}
+        buttonText="Login"
+        onSuccess={handleLoginSuccess}
+        onFailure={responseGoogle}
+        cookiePolicy={"single_host_origin"}
+      />
+      {profile && <GoogleProfile profile={profile} />}
     </div>
   );
-}
+};
 
 export default App;
