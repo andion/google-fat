@@ -1,8 +1,53 @@
-.App {
+:root {
+  --base-size: 1rem;
+  --s: var(--base-size);
+  --m: calc(var(--base-size) * 2);
+  --l: calc(var(--base-size) * 3);
+  --xl: calc(var(--base-size) * 4);
+  --text-color: #555;
+}
+
+body {
+  color: var(--text-color);
+  padding: var(--m);
+  line-height: 2.5rem;
+}
+
+header {
+  margin: var(--m) 0;
+}
+
+main {
+  margin: var(--m) 0;
+}
+
+section {
+  margin: var(--m) 0;
+}
+
+.centered {
   text-align: center;
-  color: #555;
+}
+
+article {
+  border: 1px solid red;
+}
+
+footer {
+  padding: var(--m) 0;
+  border-top: 1px solid #eee;
+  text-align: right;
 }
 
 ul {
   list-style-type: none;
+}
+
+a {
+  color: steelblue;
+  text-decoration: none;
+}
+
+a:hover {
+  color: lightsteelblue;
 }
