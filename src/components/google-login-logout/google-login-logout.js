@@ -23,6 +23,7 @@ const GoogleLoginLogout = ({
       onSuccess={onLoginSuccess}
       onFailure={onLoginFailure}
       cookiePolicy={"single_host_origin"}
+      scope="https://www.googleapis.com/auth/fitness.body.read"
     />
   );
 

@@ -1,12 +1,15 @@
 import "./App.css";
 import { useState } from "react";
 import GoogleProfile from "./components/google-profile";
-import GoogleloginLogout from "components/google-login-logout";
-import { GoogleLogin, GoogleLogout } from "react-google-login";
+import GoogleloginLogout from "./components/google-login-logout";
+import IntroPage from "./components/intro-page";
+import GoogleFitWeight from "./components/google-fit-weight";
 
 const App = () => {
   const [profile, setProfile] = useState(null);
   const [token, setToken] = useState(null);
+
+  const loggedIn = Boolean(token);
 
   const handleLoginSuccess = (resp) => {
     console.log("LOGIN", resp);
@@ -26,27 +29,23 @@ const App = () => {
         <h1>Am I FAT?</h1>
       </header>
       <main>
-        {profile ? (
-          <GoogleProfile profile={profile} />
-        ) : (
-          <section class="centered">
-            <h2>
-              Am I overweight?
-              <br />
-              What am I?
-              <br />
-              Am I something?
-              <br />
-              Let's find out
-              <br />
-            </h2>
-          </section>
-        )}
-        <GoogleloginLogout
-          loggedIn={Boolean(token)}
-          onLoginSuccess={handleLoginSuccess}
-          onLogoutSuccess={handleLogoutSuccess}
-        />
+        <section className="centered">
+          {loggedIn ? (
+            <>
+              <GoogleProfile profile={profile} compact />
+              <GoogleFitWeight token={token} />
+            </>
+          ) : (
+            <IntroPage />
+          )}
+        </section>
+        <section className="centered">
+          <GoogleloginLogout
+            loggedIn={loggedIn}
+            onLoginSuccess={handleLoginSuccess}
+            onLogoutSuccess={handleLogoutSuccess}
+          />
+        </section>
       </main>
     </>
   );
