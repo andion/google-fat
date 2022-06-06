@@ -12,7 +12,7 @@ const App = () => {
   const loggedIn = Boolean(token);
 
   const handleLoginSuccess = (resp) => {
-    console.log("LOGIN", resp);
+    console.log("LOGIN >>>>", resp);
     setProfile(resp.profileObj);
     setToken(resp.tokenObj);
   };

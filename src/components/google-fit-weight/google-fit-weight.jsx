@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getLastWeight, parseGoogleWeightData } from "./utils";
 import axios from "axios";
 
 const GOOGLE_FIT_URL =
@@ -22,39 +23,42 @@ export const getRequestHeaders = (accessToken) => ({
 const getWeightBody = (endTime) => ({
   aggregateBy: [
     {
-      dataTypeName: {
-        title: "Weight",
-        type: "com.google.weight",
-      },
+      dataTypeName: "com.google.weight",
     },
   ],
   bucketByTime: {
     durationMillis: 86400000,
   },
   endTimeMillis: endTime,
-  startTimeMillis: endTime - 7 * 86400000,
+  startTimeMillis: endTime - 30 * 86400000,
 });
 
-const getWeight = (accessToken) =>
+const getWeightData = (accessToken) =>
   axios.post(
     GOOGLE_FIT_URL,
-    getWeightBody(new Date()),
+    getWeightBody(new Date().getTime()),
     getRequestHeaders(accessToken)
   );
+
 const GoogleFitWeight = ({ token }) => {
   const { access_token } = token;
-  const [weight, setWeight] = useState(null);
+  const [weightData, setWeightData] = useState(null);
 
-  getWeight(access_token).then((data) => {
-    console.log(data);
-    setWeight(data);
-  });
+  useEffect(() => {
+    getWeightData(access_token).then((data) => {
+      setWeightData(parseGoogleWeightData(data));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
       <h1> You are fucking fat, you fat cunt.</h1>
-      {weight ? (
-        <tt>WEIGHT: {JSON.stringify(weight)}</tt>
+      {weightData ? (
+        <h2>
+          Your last WEIGHT: {getLastWeight(weightData)?.date}:
+          {getLastWeight(weightData)?.weight}
+        </h2>
       ) : (
         <p>NO WEIGHT YET</p>
       )}
