@@ -1,19 +1,19 @@
-.profile {
+div.profile {
   display: flex;
+  align-items: center;
 }
 
-.profile img {
+div.profile img {
   width: 150px;
   height: 150px;
   border-radius: 10px;
-  box-shadow: -1px 1px 2px 2px #aaa;
+  box-shadow: -1px 1px 1px 1px #aaa;
 }
 
-.profile img.small {
-  width: 100px;
-  height: 100px;
-  border-radius: 5px;
-  box-shadow: -1px 1px 2px 2px #aaa;
+div.profile img.small {
+  width: 35px;
+  height: 35px;
+  border-radius: 2.5px;
 }
 
 .profile-info {

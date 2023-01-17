@@ -1,50 +1,44 @@
 import "./App.css";
-import { useState } from "react";
 import GoogleProfile from "./components/google-profile";
 import GoogleloginLogout from "./components/google-login-logout";
 import IntroPage from "./components/intro-page";
 import GoogleFitWeight from "./components/google-fit-weight";
+import useLocalStorage from "./hooks/use-local-storage";
 
 const App = () => {
-  const [profile, setProfile] = useState(null);
-  const [token, setToken] = useState(null);
+  const [profile, setProfile] = useLocalStorage("profile", null);
+  const [token, setToken] = useLocalStorage("token", null);
 
-  const loggedIn = Boolean(token);
+  const isLoggedIn = () => Boolean(token) && Boolean(profile);
 
   const handleLoginSuccess = (resp) => {
-    console.log("LOGIN >>>>", resp);
     setProfile(resp.profileObj);
     setToken(resp.tokenObj);
   };
 
-  const handleLogoutSuccess = (resp) => {
-    console.log("LOGOOUTED", resp);
+  const handleLogoutSuccess = () => {
     setProfile(null);
     setToken(null);
   };
 
   return (
     <>
-      <header className="centered">
-        <h1>Am I FAT?</h1>
-      </header>
-      <main>
-        <section className="centered">
-          {loggedIn ? (
-            <>
-              <GoogleProfile profile={profile} compact />
-              <GoogleFitWeight token={token} />
-            </>
-          ) : (
-            <IntroPage />
-          )}
+      <header>
+        <section>
+          <h1>Google weight ⚖️</h1>
         </section>
-        <section className="centered">
+        <section>
+          <GoogleProfile profile={profile} compact />
           <GoogleloginLogout
-            loggedIn={loggedIn}
+            loggedIn={isLoggedIn()}
             onLoginSuccess={handleLoginSuccess}
             onLogoutSuccess={handleLogoutSuccess}
           />
+        </section>
+      </header>
+      <main>
+        <section>
+          {!isLoggedIn() ? <IntroPage /> : <GoogleFitWeight token={token} />}
         </section>
       </main>
     </>

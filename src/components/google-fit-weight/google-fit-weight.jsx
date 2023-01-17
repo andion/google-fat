@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { getLastWeight, parseGoogleWeightData } from "./utils";
+import { parseGoogleWeightData } from "./utils";
+import { Calendar } from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "./calendar.css";
+import Weight from "../weight";
 import axios from "axios";
 
 const GOOGLE_FIT_URL =
@@ -20,48 +24,98 @@ export const getRequestHeaders = (accessToken) => ({
   },
 });
 
-const getWeightBody = (endTime) => ({
-  aggregateBy: [
-    {
-      dataTypeName: "com.google.weight",
-    },
-  ],
-  bucketByTime: {
-    durationMillis: 86400000,
-  },
-  endTimeMillis: endTime,
-  startTimeMillis: endTime - 30 * 86400000,
-});
+const getMonthlyWeightBody = (date) => {
+  const startTimeMillis = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    1
+  ).getTime();
+  const endTimeMillis = new Date(
+    date.getFullYear(),
+    date.getMonth() + 1,
+    1
+  ).getTime();
 
-const getWeightData = (accessToken) =>
+  return {
+    aggregateBy: [
+      {
+        dataTypeName: "com.google.weight",
+      },
+    ],
+    bucketByTime: {
+      durationMillis: 86400000, // 1 day per bucket
+    },
+    startTimeMillis,
+    endTimeMillis,
+  };
+};
+
+const getWeightData = (accessToken, startOfTheMonth) =>
   axios.post(
     GOOGLE_FIT_URL,
-    getWeightBody(new Date().getTime()),
+    getMonthlyWeightBody(startOfTheMonth),
     getRequestHeaders(accessToken)
   );
 
+const sameDay = (date1, date2) => {
+  const d1 = date1 instanceof Date ? date1 : new Date(date1);
+  const d2 = date2 instanceof Date ? date2 : new Date(date2);
+
+  return (
+    d1.getDate() === d2.getDate() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getFullYear() === d2.getFullYear()
+  );
+};
+
 const GoogleFitWeight = ({ token }) => {
   const { access_token } = token;
-  const [weightData, setWeightData] = useState(null);
+  const [weightData, setWeightData] = useState([]);
+  const [startOfTheMonth, setStartOfTheMonth] = useState(new Date());
+
+  const getWeightForDate = (givenDate) => {
+    const dayWeigths = weightData
+      .filter(({ date }) => sameDay(date, givenDate))
+      .map((data) => data.weight);
+
+    return (
+      <>
+        {dayWeigths.map((w) => (
+          <Weight weight={w} idealWeight={75} />
+        ))}
+      </>
+    );
+  };
 
   useEffect(() => {
-    getWeightData(access_token).then((data) => {
+    getWeightData(access_token, startOfTheMonth).then((data) => {
       setWeightData(parseGoogleWeightData(data));
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [startOfTheMonth]);
 
   return (
     <>
-      <h1> You are fucking fat, you fat cunt.</h1>
-      {weightData ? (
-        <h2>
-          Your last WEIGHT: {getLastWeight(weightData)?.date}:
-          {getLastWeight(weightData)?.weight}
-        </h2>
-      ) : (
-        <p>NO WEIGHT YET</p>
-      )}
+      <h1>Weight data</h1>
+      <div>
+        <Calendar
+          onActiveStartDateChange={({ activeStartDate }) =>
+            setStartOfTheMonth(activeStartDate)
+          }
+          onClickDay={(value) =>
+            console.log(
+              "CLICKED DATE: ",
+              value,
+              " WEIGHT: ",
+              getWeightForDate(value)
+            )
+          }
+          tileContent={({ date, view }) =>
+            view === "month" && getWeightForDate(date)
+          }
+        />
+      </div>
+      <pre>{JSON.stringify(weightData)}</pre>
     </>
   );
 };

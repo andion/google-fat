@@ -4,17 +4,25 @@
   --m: calc(var(--base-size) * 2);
   --l: calc(var(--base-size) * 3);
   --xl: calc(var(--base-size) * 4);
-  --text-color: #555;
+  --text-color: #444;
 }
 
 body {
   color: var(--text-color);
-  padding: var(--m);
+  padding: 0 var(--m);
   line-height: 2.5rem;
 }
 
 header {
-  margin: var(--m) 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+header > section {
+  display: inline-flex;
+  margin: 0;
+  align-items: center;
 }
 
 main {

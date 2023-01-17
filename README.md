@@ -6,10 +6,18 @@ Un experimento con las Apis de google para mostrar el peso de una manera útil y
 
 - [x] Login con google
 - [x] Sacar la info de fit
-  - [] Cachear en localStorage dia/peso
+  - [ ] Cachear en localStorage dia/peso
 - [ ] Guardar token para mantener logueado
 - [ ] Perfil de usuario -> Probar Tailwind a ver que tal
 - [ ] Gráficas
+
+## TODO's que para algo tengo TDAH XDDD
+
+- [x] Estilar el calendario de react-calendar
+- [x] Cambiar el mes con el selector
+- [x] Sacar los pesos por día
+- [ ] Gráfica pequeñita en cada día?
+- [ ] Gráfica grande de mes :)
 
 # Sacar la info de fit
 

@@ -11,6 +11,9 @@ const GoogleProfileImage = ({ imageUrl, googleId, small }) => (
 );
 
 const GoogleProfile = ({ profile, compact }) => {
+  if (!profile) {
+    return null;
+  }
   const Profile = compact ? CompactGoogleProfile : ExtendedGoogleProfile;
   return <Profile profile={profile} />;
 };
@@ -19,10 +22,10 @@ const CompactGoogleProfile = ({ profile }) => {
   const { googleId, imageUrl, name } = profile;
 
   return (
-    <section className="centered">
+    <div className="profile">
       <GoogleProfileImage small imageUrl={imageUrl} googleId={googleId} />
-      <h1>{name}</h1>
-    </section>
+      <h3>{name}</h3>
+    </div>
   );
 };
 

@@ -1,14 +1,5 @@
 const IntroPage = () => (
-  <h2>
-    Am I overweight?
-    <br />
-    What am I?
-    <br />
-    Am I something?
-    <br />
-    Let's find out
-    <br />
-  </h2>
+  <h2>Log in with your Google Account to check your recorded weights</h2>
 );
 
 export default IntroPage;
